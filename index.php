@@ -132,15 +132,15 @@ $stream = 'php://stdout';
 $settings='';
 
 // Settings-file Caching Implementation
-if(isset($_GET['nocache']) && $_GET['nocache']==1){
-
-    unset($_SESSION['settings']);
-}
-if(isset($_SESSION['settings'])){
-
+if(isset($_GET['cache']) && $_GET['cache']==1 && isset($_SESSION['settings'])){
     $settings=  $_SESSION['settings'];
 }else{
     $settings=VWO::getSettingsFile($account_id,$sdk_key);
+    if(isset($_GET['cache']) && $_GET['cache']==1){
+        $_SESSION['settings']=$settings;
+    }else{
+        unset($_SESSION['settings']);
+    }
 }
 
 // object instead of many parameteres

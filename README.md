@@ -34,8 +34,13 @@ $sdkKey = 'REPLACE_THIS_WITH_CORRECT_VALUE';
 
 ```
 php -S localhost:1112 -t .
-```
 
+//open url without setttings-file being cached
+http://localhost:1112
+
+//open url with setttings-file being cached
+http://localhost:1112?cache=1
+```
 ### LICENSE
 
 ```text
