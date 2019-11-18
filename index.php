@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <html>
 <head>
     <title>VWO PHP SDK Example</title>
@@ -84,7 +85,7 @@
 require_once('vendor/autoload.php');
 require_once('userProfile.php');
 require_once('customLogger.php');
-session_start();
+
 $customerHashlist=array(
     'Ashley',
     'Bill',
@@ -115,9 +116,22 @@ $customerHashlist=array(
 );
 
 use vwo\VWO;
-$account_id=123456;
-$sdk_key='loremipsum123456';
+
+// Require logger deps to modify custom logger implementation
+// Also, verify the deps-path
+use \vwo\Logger\DefaultLogger as VwoLogger;
+use \Monolog\Logger as Logger;
+
+$account_id=00000; // get it from VWO application
+$sdk_key=''; // get it from VWO application
+
+// send logs to stdout, you can configure it as per Monolog options available
+// Read more - https://github.com/Seldaek/monolog
+$stream = 'php://stdout';
+
 $settings='';
+
+// Settings-file Caching Implementation
 if(isset($_GET['nocache']) && $_GET['nocache']==1){
 
     unset($_SESSION['settings']);
@@ -130,17 +144,14 @@ if(isset($_SESSION['settings'])){
 }
 
 // object instead of many parameteres
-
-// to check for empty schema
-
-
-
 $config=['settingsFile'=>$settings,
-    'isDevelopmentMode'=>0,
-    //'logging'=>new CustomLogger(),
+    'isDevelopmentMode' => 0,
+    // Uncomment below line to define monolog log-levels(DEBUG, INFO, WARNING, ERROR) and streams
+    // 'logging' => new VWOLogger(Logger::DEBUG, $stream),
+    // Uncomment below line, If you want to implement your own logger i.e. you want message and level so that you can use them accordingly
+    'logging' => new CustomLogger(),
     //'userProfileService'=> new userProfile()
 ];
-
 
 $vwoClient = new VWO($config);
 $_SESSION['settings']=$vwoClient->settings;
@@ -151,7 +162,8 @@ $customer_hash=$customerHashlist[rand(0,9)];
 $varient=$vwoClient->getVariation($campaign_name,$customer_hash);
 $goalIdentifier='CUSTOM';
 
-//$w=$vwoClient->track($campaign_name,$customer_hash,$$goalIdentifier);
+// Uncomment below line, If you want to track a goal, Update $goalIdentifier as per VWO application campaign
+// $vwoClient->track($campaign_name,$customer_hash,$$goalIdentifier);
 ?>
 <h2 class="center  color-blue">VWO PHP SDK Example</h2>
 <div class="main-container">
@@ -201,4 +213,3 @@ $goalIdentifier='CUSTOM';
 
 </body>
 </html>
-
