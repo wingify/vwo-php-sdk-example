@@ -1,4 +1,3 @@
-<?php session_start(); ?>
 <html>
 <head>
     <title>VWO PHP SDK Example</title>
@@ -80,21 +79,3 @@
     }
 </style>
 <body>
-<div>
-  <h2 class="center  color-blue">VWO PHP SDK Example</h2>
-  <div class="main-container">
-    <h3>Hey there, what would you like to experiment?</h3>
-
-    <div>
-      <ul c;ass="margin--top">
-        <li><a href="src/ab.php">A/B Test</a></li>
-        <li><a href="src/feature_rollout.php">Feature Rollout</a></li>
-        <li><a href="src/feature_test.php">Feature Test</a></li>
-        <li><a href="src/push.php">Push API</a></li>
-      </ul>
-    </div>
-  </div>
-</div>
-
-</body>
-</html>
