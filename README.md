@@ -20,14 +20,20 @@ Refer [VWO Official Server-side Documentation](https://developers.vwo.com/refere
 composer install
 ```
 
-2. Update your app with your accountId, sdk-key, campaign-test-key and goal-identifier
+2. Update configuration based on your setup inside `config.php`
 
-```text
-$campaignTestKey = 'REPLACE_THIS_WITH_CORRECT_VALUE';
-$goalIdentifeir = 'REPLACE_THIS_WITH_CORRECT_VALUE';
-$accountId = 'REPLACE_THIS_WITH_CORRECT_VALUE';
-$sdkKey = 'REPLACE_THIS_WITH_CORRECT_VALUE';
+```php
+const ACCOUNT_ID = '';
+const SDK_KEY = '';
 
+const AB_CAMPAIGN_KEY = '';
+const AB_CAMPAIGN_GOAL_IDENTIFIER = '';
+
+const FEATURE_ROLLOUT_CAMPAIGN_KEY = '';
+const FEATURE_TEST_CAMPAIGN_KEY = '';
+
+const TAG_KEY = '';
+const TAG_VALUE = '';
 ```
 
 3. Run application
@@ -41,28 +47,15 @@ http://localhost:1112
 //open url with setttings-file being cached
 http://localhost:1112?cache=1
 ```
-### LICENSE
 
-```text
-    MIT License
+4. For development
 
-    Copyright (c) 2019 Wingify Software Pvt. Ltd.
-
-    Permission is hereby granted, free of charge, to any person obtaining a copy
-    of this software and associated documentation files (the "Software"), to deal
-    in the Software without restriction, including without limitation the rights
-    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    copies of the Software, and to permit persons to whom the Software is
-    furnished to do so, subject to the following conditions:
-
-    The above copyright notice and this permission notice shall be included in all
-    copies or substantial portions of the Software.
-
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-    SOFTWARE.
 ```
+composer run-script start
+```
+
+## License
+
+[Apache License, Version 2.0](https://github.com/wingify/vwo-php-sdk-example/blob/master/LICENSE)
+
+Copyright 2019 Wingify Software Pvt. Ltd.
