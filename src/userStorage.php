@@ -24,24 +24,25 @@ class UserStorage implements UserStorageInterface
     /**
      * @param $userId
      * @param $campaignName
-     * @return string
+     * @return array
      */
     public function get($userId, $campaignName)
     {
-        // xyz actions
-        return[
+        $variation = $db->getVariation($userId, $campaignName); // get variation
+
+        return [
             'userId' => $userId,
-            $campaignName => ['variationName' => 'Control']
+            'campaignKey' => $campaignKey,
+            'variationName' => $variation
         ];
     }
 
     /**
      * @param $campaignInfo
-     * @return bool
      */
     public function set($campaignInfo)
     {
-       // print_r($campaignInfo);
-        return true;
+       // use $campaignInfo to set it into your storage system
+       // Please check how we would like you to pass it while getting it
     }
 }
