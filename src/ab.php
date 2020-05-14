@@ -64,7 +64,7 @@ $segmentVars['var1'] = '';
 $vwoClient = new VWO($config);
 $_SESSION['settings'] = $vwoClient->settings;
 
-$userId = $_GET['userId'] || USERS_LIST[rand(0, 25)];
+$userId = isset($_GET['userId']) ? $_GET['userId'] : USERS_LIST[rand(0, 25)];
 
 $variationName = $vwoClient->getVariationName(AB_CAMPAIGN_KEY, $userId, $segmentVars);
 $w = $vwoClient->track(AB_CAMPAIGN_KEY, $userId, AB_CAMPAIGN_GOAL_IDENTIFIER);

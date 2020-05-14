@@ -71,7 +71,7 @@ $variablekey2 = 'float1';
 $variablekey3 = 'string1';
 $variablekey4 = 'bool1';
 
-$userId = $_GET['userId'];// || USERS_LIST[rand(0, 25)];
+$userId = isset($_GET['userId']) ? $_GET['userId'] : USERS_LIST[rand(0, 25)];
 $variationName = $vwoClient->getVariationName(FEATURE_TEST_CAMPAIGN_KEY, $userId, $segmnentVars);
 $res = $vwoClient->isFeatureEnabled(FEATURE_TEST_CAMPAIGN_KEY, $userId);
 $val1 = $vwoClient->getFeatureVariableValue(FEATURE_TEST_CAMPAIGN_KEY, $variablekey1, $userId);

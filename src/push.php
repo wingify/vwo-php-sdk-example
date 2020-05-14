@@ -66,7 +66,7 @@ $config = ['settingsFile' => $settingsFile,
 $segmnentVars['test'] = '';
 $vwoClient = new VWO($config);
 $_SESSION['settings'] = $vwoClient->settings;
-$userId = $_GET['userId'] || USERS_LIST[rand(0, 25)];
+$userId = isset($_GET['userId']) ? $_GET['userId'] : USERS_LIST[rand(0, 25)];
 
 $pushResult = $vwoClient->push(TAG_KEY, TAG_VALUE, $userId);
 
