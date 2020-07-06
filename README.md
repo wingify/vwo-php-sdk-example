@@ -58,4 +58,4 @@ composer run-script start
 
 [Apache License, Version 2.0](https://github.com/wingify/vwo-php-sdk-example/blob/master/LICENSE)
 
-Copyright 2019 Wingify Software Pvt. Ltd.
+Copyright 2019-2020 Wingify Software Pvt. Ltd.

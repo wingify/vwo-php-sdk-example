@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2019 Wingify Software Pvt. Ltd.
+ * Copyright 2019-2020 Wingify Software Pvt. Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,16 +16,16 @@
  * limitations under the License.
  */
 
-require_once('../vendor/autoload.php');
-require_once('./userStorage.php');
-require_once('./customLogger.php');
-require_once('../config.php');
+require_once '../vendor/autoload.php';
+require_once './userStorage.php';
+require_once './customLogger.php';
+require_once '../config.php';
 session_start();
 ini_set('date.timezone', 'Europe/Berlin');
 ?>
 <?php
 
-include_once('./templates/header.php');
+require_once './templates/header.php';
 
 use vwo\VWO;
 
@@ -60,29 +60,29 @@ $config = ['settingsFile' => $settingsFile,
     //'userStorageService'=> new UserStorage(),
 ];
 
-$segmnentVars['var1'] = '';
-$segmnentVars['var2'] = '';
+$options = [
+    'customVariables' => FEATURE_TEST_CUSTOM_VARIABLES,
+    'variationTargetingVariables' => FEATURE_TEST_VARIATION_TARGETING_VARIABLES
+];
 
 $vwoClient = new VWO($config);
 $_SESSION['settings'] = $vwoClient->settings;
 
-$variablekey1 = 'int1';
-$variablekey2 = 'float1';
-$variablekey3 = 'string1';
-$variablekey4 = 'bool1';
-
 $userId = isset($_GET['userId']) ? $_GET['userId'] : USERS_LIST[rand(0, 25)];
-$variationName = $vwoClient->getVariationName(FEATURE_TEST_CAMPAIGN_KEY, $userId, $segmnentVars);
-$res = $vwoClient->isFeatureEnabled(FEATURE_TEST_CAMPAIGN_KEY, $userId);
-$val1 = $vwoClient->getFeatureVariableValue(FEATURE_TEST_CAMPAIGN_KEY, $variablekey1, $userId);
-$val2 = $vwoClient->getFeatureVariableValue(FEATURE_TEST_CAMPAIGN_KEY, $variablekey2, $userId);
-$val3 = $vwoClient->getFeatureVariableValue(FEATURE_TEST_CAMPAIGN_KEY, $variablekey3, $userId);
-$val4 = $vwoClient->getFeatureVariableValue(FEATURE_TEST_CAMPAIGN_KEY, $variablekey4, $userId);
+$variationName = $vwoClient->getVariationName(FEATURE_TEST_CAMPAIGN_KEY, $userId, $options);
+$res = $vwoClient->isFeatureEnabled(FEATURE_TEST_CAMPAIGN_KEY, $userId, $options);
+$val1 = $vwoClient->getFeatureVariableValue(FEATURE_TEST_CAMPAIGN_KEY, VARIABLE_1, $userId, $options);
+$val2 = $vwoClient->getFeatureVariableValue(FEATURE_TEST_CAMPAIGN_KEY, VARIABLE_2, $userId, $options);
+$val3 = $vwoClient->getFeatureVariableValue(FEATURE_TEST_CAMPAIGN_KEY, VARIABLE_3, $userId, $options);
+$val4 = $vwoClient->getFeatureVariableValue(FEATURE_TEST_CAMPAIGN_KEY, VARIABLE_4, $userId, $options);
 
-// Uncomment below line, If you want to track a goal, Update $goalIdentifier as per VWO application campaign
-// $goalIdentifier = '';
-// $revenueValue = '';
-// $w = $vwoClient->track(FEATURE_TEST_CAMPAIGN_KEY, $userId, $goalIdentifier, $revenueValue);
+$vwoClient->track(FEATURE_TEST_CAMPAIGN_KEY, $userId, GOAL_IDENTIFIER, $options);
+
+$variables = array();
+$variables[VARIABLE_1] = $val1;
+$variables[VARIABLE_2] = $val2;
+$variables[VARIABLE_3] = $val3;
+$variables[VARIABLE_4] = $val4;
 
 ?>
 <h2 class="center  color-blue">VWO PHP SDK Example</h2>
@@ -100,27 +100,30 @@ $val4 = $vwoClient->getFeatureVariableValue(FEATURE_TEST_CAMPAIGN_KEY, $variable
                 <div>Campaign test key - <strong><?php echo FEATURE_TEST_CAMPAIGN_KEY; ?></strong></div>
             </div>
             <div class="center margin--top">
-                <div>Campaign goal identifier - <strong><?php echo $goalIdentifier; ?></strong></div>
+                <div>Campaign goal identifier - <strong><?php echo GOAL_IDENTIFIER; ?></strong></div>
             </div>
 
             <div class="center  margin--top">
                 <div>userId - <strong><?php echo $userId; ?></strong></div>
             </div>
             <div class="center  margin--top">
-                <div>Feature Test1 Enabled - <strong><?php echo $res == true ? 'true' : 'false'; ?></strong></div>
+                <div>Feature Test Enabled - <strong><?php echo $res == true ? 'true' : 'false'; ?></strong></div>
 
             </div>
             <div class="center  margin--top">
-                <div>Feature Value - <strong><?php echo $variablekey1 . '=' . $val1; ?></strong></div><br>
-                <div>Feature Value - <strong><?php echo $variablekey2 . '=' . $val2; ?></strong></div><br>
-                <div>Feature Value - <strong><?php echo $variablekey3 . '=' . $val3; ?></strong></div><br>
-                <div>Feature Value - <strong><?php echo $variablekey4 . '=' . $val4; ?></strong></div>
+                <div>Feature Value - <strong>
+                    <pre><code><?php if (isset($variables)) {
+                        echo json_encode($variables, JSON_PRETTY_PRINT);
+} ?>
+                    </code></pre>
+                </strong>
+                </div>
 
             </div>
             <div class="center  margin--top">
-                <pre><code><?php if (isset($segmnentVars)) {
-                    echo json_encode($segmnentVars, JSON_PRETTY_PRINT);
-                           } ?></code></pre>
+                <pre><code><?php if (isset($options)) {
+                    echo json_encode($options, JSON_PRETTY_PRINT);
+} ?></code></pre>
             </div>
             <?php if ($variationName != null) { ?>
                 <div class="center  margin--top">

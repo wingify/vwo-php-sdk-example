@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2019 Wingify Software Pvt. Ltd.
+ * Copyright 2019-2020 Wingify Software Pvt. Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,10 @@
  * limitations under the License.
  */
 
-require_once('../vendor/autoload.php');
-require_once('./userStorage.php');
-require_once('./customLogger.php');
-require_once('../config.php');
+require_once '../vendor/autoload.php';
+require_once './userStorage.php';
+require_once './customLogger.php';
+require_once '../config.php';
 session_start();
 ini_set('date.timezone', 'Europe/Berlin');
 
@@ -27,7 +27,7 @@ ini_set('date.timezone', 'Europe/Berlin');
 
 <?php
 
-include_once('./templates/header.php');
+require_once './templates/header.php';
 
 use vwo\VWO;
 
@@ -63,7 +63,6 @@ $config = ['settingsFile' => $settingsFile,
 ];
 
 
-$segmnentVars['test'] = '';
 $vwoClient = new VWO($config);
 $_SESSION['settings'] = $vwoClient->settings;
 $userId = isset($_GET['userId']) ? $_GET['userId'] : USERS_LIST[rand(0, 25)];

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2019 Wingify Software Pvt. Ltd.
+ * Copyright 2019-2020 Wingify Software Pvt. Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,16 +16,16 @@
  * limitations under the License.
  */
 
-require_once('../vendor/autoload.php');
-require_once('./userStorage.php');
-require_once('./customLogger.php');
-require_once('../config.php');
+require_once '../vendor/autoload.php';
+require_once './userStorage.php';
+require_once './customLogger.php';
+require_once '../config.php';
 session_start();
 ini_set('date.timezone', 'Europe/Berlin');
 
 ?>
 <?php
-include_once('./templates/header.php');
+require_once './templates/header.php';
 
 use vwo\VWO;
 
@@ -60,14 +60,18 @@ $config = ['settingsFile' => $settingsFile,
     //'userStorageService'=> new UserStorage(),
 ];
 
-$segmentVars['var1'] = '';
+$options = [
+    'customVariables' => AB_CUSTOM_VARIABLES,
+    'variationTargetingVariables' => AB_VARIATION_TARGETING_VARIABLES
+];
+
 $vwoClient = new VWO($config);
 $_SESSION['settings'] = $vwoClient->settings;
 
 $userId = isset($_GET['userId']) ? $_GET['userId'] : USERS_LIST[rand(0, 25)];
 
-$variationName = $vwoClient->getVariationName(AB_CAMPAIGN_KEY, $userId, $segmentVars);
-$w = $vwoClient->track(AB_CAMPAIGN_KEY, $userId, AB_CAMPAIGN_GOAL_IDENTIFIER);
+$variationName = $vwoClient->activate(AB_CAMPAIGN_KEY, $userId, $options);
+$w = $vwoClient->track(AB_CAMPAIGN_KEY, $userId, AB_CAMPAIGN_GOAL_IDENTIFIER, $options);
 
 ?>
 <h2 class="center  color-blue">VWO PHP SDK Example</h2>
@@ -92,8 +96,8 @@ $w = $vwoClient->track(AB_CAMPAIGN_KEY, $userId, AB_CAMPAIGN_GOAL_IDENTIFIER);
                 <div>userId - <strong><?php echo $userId; ?></strong></div>
             </div>
             <div class="center  margin--top">
-                <pre><code><?php if (isset($segmentVars)) {
-                    echo json_encode($segmentVars, JSON_PRETTY_PRINT);
+                <pre><code><?php if (isset($options)) {
+                    echo json_encode($options, JSON_PRETTY_PRINT);
                            } ?></code></pre>
             </div>
 

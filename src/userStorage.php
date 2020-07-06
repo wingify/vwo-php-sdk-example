@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2019 Wingify Software Pvt. Ltd.
+ * Copyright 2019-2020 Wingify Software Pvt. Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,13 +22,14 @@ class UserStorage implements UserStorageInterface
 {
 
     /**
-     * @param $userId
-     * @param $campaignName
+     * @param  $userId
+     * @param  $campaignName
      * @return array
      */
-    public function get($userId, $campaignName)
+    public function get($userId, $campaignKey)
     {
-        $variation = $db->getVariation($userId, $campaignName); // get variation
+        // Fetch from Storage system
+        // $variation = $db->getVariation($userId, $campaignName);
 
         return [
             'userId' => $userId,
@@ -38,11 +39,11 @@ class UserStorage implements UserStorageInterface
     }
 
     /**
-     * @param $campaignInfo
+     * @param $campaignUserMapping
      */
-    public function set($campaignInfo)
+    public function set($campaignUserMapping)
     {
-       // use $campaignInfo to set it into your storage system
-       // Please check how we would like you to pass it while getting it
+        // use $campaignUserMapping to set it into your storage system
+        // Please check how we would like you to pass it while getting it in `get` method
     }
 }

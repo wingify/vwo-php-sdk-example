@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2019 Wingify Software Pvt. Ltd.
+ * Copyright 2019-2020 Wingify Software Pvt. Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,16 +16,16 @@
  * limitations under the License.
  */
 
-require_once('../vendor/autoload.php');
-require_once('./userStorage.php');
-require_once('./customLogger.php');
-require_once('../config.php');
+require_once '../vendor/autoload.php';
+require_once './userStorage.php';
+require_once './customLogger.php';
+require_once '../config.php';
 session_start();
 ini_set('date.timezone', 'Europe/Berlin');
 
 ?>
 <?php
-include_once('./templates/header.php');
+require_once './templates/header.php';
 
 use vwo\VWO;
 
@@ -55,29 +55,35 @@ if (isset($_GET['cache']) && $_GET['cache'] == 1 && isset($_SESSION['settings'])
 $config = ['settingsFile' => $settingsFile,
     'isDevelopmentMode' => 0,
     // Uncomment below line to define monolog log-levels(DEBUG, INFO, WARNING, ERROR) and streams
-    // 'logging' => new VWOLogger(Logger::DEBUG, $stream),
+    'logging' => new CustomLogger(Logger::ERROR, $stream),
     // Uncomment below line, If you want to implement your own logger i.e. you want message and level so that you can use them accordingly
     //'userStorageService'=> new UserStorage(),
 ];
 
 
-$segmnentVars['test'] = '';
+$options = [
+    'customVariables' => FEATURE_ROLLOUT_CUSTOM_VARIABLES
+];
+
 $vwoClient = new VWO($config);
 
 $_SESSION['settings'] = $vwoClient->settings;
 
 $userId = isset($_GET['userId']) ? $_GET['userId'] : USERS_LIST[rand(0, 25)];
 
-$variablekey = '';
+$variationName = $vwoClient->getVariationName(FEATURE_ROLLOUT_CAMPAIGN_KEY, $userId, $options);
 
-$variationName = $vwoClient->getVariationName(FEATURE_ROLLOUT_CAMPAIGN_KEY, $userId);
-$res = $vwoClient->isFeatureEnabled(FEATURE_ROLLOUT_CAMPAIGN_KEY, $userId);
-$val = $vwoClient->getFeatureVariableValue(FEATURE_ROLLOUT_CAMPAIGN_KEY, $variablekey, $userId);
+$res = $vwoClient->isFeatureEnabled(FEATURE_ROLLOUT_CAMPAIGN_KEY, $userId, $options);
+$val1 = $vwoClient->getFeatureVariableValue(FEATURE_ROLLOUT_CAMPAIGN_KEY, VARIABLE_1, $userId, $options);
+$val2 = $vwoClient->getFeatureVariableValue(FEATURE_ROLLOUT_CAMPAIGN_KEY, VARIABLE_2, $userId, $options);
+$val3 = $vwoClient->getFeatureVariableValue(FEATURE_ROLLOUT_CAMPAIGN_KEY, VARIABLE_3, $userId, $options);
+$val4 = $vwoClient->getFeatureVariableValue(FEATURE_ROLLOUT_CAMPAIGN_KEY, VARIABLE_4, $userId, $options);
 
-// Uncomment below line, If you want to track a goal, Update $goalIdentifier as per VWO application campaign
-// $goalIdentifier = '';
-// $revenueValue = '';
-//$w=$vwoClient->track(FEATURE_ROLLOUT_CAMPAIGN_KEY,FEATURE_ROLLOUT_CAMPAIGN_KEY,$goalIdentifier,$revenueValue);
+$variables = array();
+$variables[VARIABLE_1] = $val1;
+$variables[VARIABLE_2] = $val2;
+$variables[VARIABLE_3] = $val3;
+$variables[VARIABLE_4] = $val4;
 
 ?>
 <h2 class="center  color-blue">VWO PHP SDK Example</h2>
@@ -94,22 +100,28 @@ $val = $vwoClient->getFeatureVariableValue(FEATURE_ROLLOUT_CAMPAIGN_KEY, $variab
             <div class="center  margin--top">
                 <div>Campaign test key - <strong><?php echo FEATURE_ROLLOUT_CAMPAIGN_KEY; ?></strong></div>
             </div>
-            <div class="center margin--top">
-                <div>Campaign goal identifier - <strong><?php echo $goalIdentifier; ?></strong></div>
+            <div class="center">
+                <div>Campaign goal identifier - <strong><?php echo GOAL_IDENTIFIER; ?></strong></div>
             </div>
 
-            <div class="center  margin--top">
+            <div class="center ">
                 <div>userId - <strong><?php echo $userId; ?></strong></div>
             </div>
-            <div class="center  margin--top">
+            <div class="center ">
                 <div>Feature Rollout Enabled - <strong><?php echo $res == true ? 'true' : 'false'; ?></strong></div>
             </div>
-            <div class="center  margin--top">
-                <div>Feature Value - <strong><?php echo $variablekey . '=' . $val; ?></strong></div>
+            <div class="center ">
+                <div>Feature Value - <strong>
+                <pre><code><?php if (isset($variables)) {
+                    echo json_encode($variables, JSON_PRETTY_PRINT);
+                           } ?>
+                </code></pre>
+                </strong>
+                </div>
             </div>
-            <div class="center  margin--top">
-                <pre><code><?php if (isset($segmnentVars)) {
-                    echo json_encode($segmnentVars, JSON_PRETTY_PRINT);
+            <div class="center ">
+                <pre><code><?php if (isset($options)) {
+                    echo json_encode($options, JSON_PRETTY_PRINT);
                            } ?></code></pre>
             </div>
             <?php if ($variationName != null) { ?>
