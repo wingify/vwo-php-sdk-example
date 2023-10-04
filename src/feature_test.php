@@ -68,6 +68,13 @@ $options = [
 $vwoClient = new VWO($config);
 $_SESSION['settings'] = $vwoClient->settings;
 
+$userAgent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : null; // Get the User-Agent header from the request
+$userIpAddress = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null;  // Get the client's IP address
+
+// Add the user agent and IP address to the Options dictionary
+$options['userAgent'] = !empty($userAgent) ? $userAgent : ''; // This key-value pair will be used to track the user's browser.
+$options['userIpAddress'] = !empty($userIpAddress) ? $userIpAddress : ''; // This key-value pair can be used to track the user's IP address.
+
 $userId = isset($_GET['userId']) ? $_GET['userId'] : USERS_LIST[rand(0, 25)];
 $variationName = $vwoClient->getVariationName(FEATURE_TEST_CAMPAIGN_KEY, $userId, $options);
 $res = $vwoClient->isFeatureEnabled(FEATURE_TEST_CAMPAIGN_KEY, $userId, $options);
